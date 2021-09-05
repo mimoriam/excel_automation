@@ -25,12 +25,13 @@ def paste_range(startCol, startRow, endCol, endRow, sheetReceiving, copiedData):
 
 
 def main():
+    file = "2019 Fluid dynamics Morning.xlsx"
     cleaned_file = "2019 Fluid dynamics Morning Cleaned Data.xlsx"
 
     if os.path.exists(cleaned_file):
         os.remove(cleaned_file)
 
-    wb = openpyxl.load_workbook('2019 Fluid dynamics Morning.xlsx', data_only=True)
+    wb = openpyxl.load_workbook(file, data_only=True)
     sheet = wb['Result Sheet']
 
     wb2 = openpyxl.Workbook()
