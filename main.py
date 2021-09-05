@@ -54,7 +54,7 @@ def main():
     paste_range(3, 2, 3, 26, sheet2, total_marks_range)
 
     grades_range = copy_range(9, 25, 9, 51, sheet)
-    paste_range(4, 2, 4, 26, sheet2, total_marks_range)
+    paste_range(4, 2, 4, 26, sheet2, grades_range)
 
     for row in ws2.iter_rows():
         for cell in row:
