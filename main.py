@@ -64,7 +64,7 @@ def main():
     sheet2['A1'] = "registration_num"
     sheet2['B1'] = "student_name"
     sheet2['C1'] = "total_num"
-    sheet2["D1"] = "grade"
+    sheet2['D1'] = "grade"
 
     wb2.save(filename=cleaned_file)
 
