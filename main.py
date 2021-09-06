@@ -2,6 +2,7 @@ import openpyxl
 from openpyxl.styles import Alignment
 import os
 import pathlib
+import re
 
 
 def copy_range(startCol, startRow, endCol, endRow, sheet):
@@ -30,6 +31,7 @@ def main():
     xlsx = pathlib.Path().glob("*.xlsx")
     for file in xlsx:
         xlsx_list.append(file)
+        print(file)
 
     for i in xlsx_list:
         file = f"{i}"
@@ -74,8 +76,11 @@ def main():
         sheet2['D1'] = "grade"
         sheet2['E1'] = "year"
 
-        for i in range(2, 27):
-            ws2[f"E{i}"].value = 2019
+        pattern = re.search("^[0-9]{4}", file)
+        # print(pattern.group())
+
+        for j in range(2, 27):
+            ws2[f"E{j}"].value = int(pattern.group())
 
         os.chdir('cleaned_data')
         wb2.save(filename=f'{cleaned_file}')
