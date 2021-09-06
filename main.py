@@ -3,6 +3,7 @@ from openpyxl.styles import Alignment
 import os
 import pathlib
 import re
+import pandas as pd
 
 
 def copy_range(startCol, startRow, endCol, endRow, sheet):
@@ -28,7 +29,10 @@ def paste_range(startCol, startRow, endCol, endRow, sheetReceiving, copiedData):
 
 def main():
     xlsx_list = []
+    xlsx_list_cleaned = []
     xlsx = pathlib.Path().glob("*.xlsx")
+    xlsx_cleaned = pathlib.Path('cleaned_data').glob("*.xlsx")
+
     for file in xlsx:
         xlsx_list.append(file)
         print(file)
@@ -85,6 +89,19 @@ def main():
         os.chdir('cleaned_data')
         wb2.save(filename=f'{cleaned_file}')
         os.chdir('../')
+
+    for file in xlsx_cleaned:
+        xlsx_list_cleaned.append(file)
+        print(file)
+
+    excels = [pd.ExcelFile(name) for name in xlsx_list_cleaned]
+    frames = [x.parse(x.sheet_names[0], header=None, index_col=None) for x in excels]
+    frames[1:] = [df[1:] for df in frames[1:]]
+    combined = pd.concat(frames)
+
+    os.chdir('combined_data')
+    combined.to_excel("combined.xlsx", header=False, index=False)
+    os.chdir('../')
 
 
 if __name__ == '__main__':
