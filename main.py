@@ -1,6 +1,7 @@
 import openpyxl
 from openpyxl.styles import Alignment
 import os
+import pathlib
 
 
 def copy_range(startCol, startRow, endCol, endRow, sheet):
@@ -25,48 +26,60 @@ def paste_range(startCol, startRow, endCol, endRow, sheetReceiving, copiedData):
 
 
 def main():
-    file = "2019 Fluid dynamics Morning.xlsx"
-    cleaned_file = "2019 Fluid dynamics Morning Cleaned Data.xlsx"
+    xlsx_list = []
+    xlsx = pathlib.Path().glob("*.xlsx")
+    for file in xlsx:
+        xlsx_list.append(file)
 
-    if os.path.exists(cleaned_file):
-        os.remove(cleaned_file)
+    for i in xlsx_list:
+        file = f"{i}"
+        cleaned_file = f"{file} Cleaned.xlsx"
 
-    wb = openpyxl.load_workbook(file, data_only=True)
-    sheet = wb['Result Sheet']
+        if os.path.exists(cleaned_file):
+            os.remove(cleaned_file)
 
-    wb2 = openpyxl.Workbook()
-    ws2 = wb2.active
-    sheet2 = wb2['Sheet']
-    sheet2.title = 'Results Sheet'
+        wb = openpyxl.load_workbook(file, data_only=True)
+        sheet = wb['Result Sheet']
 
-    # for rowOfCellObjects in sheet['A25': 'A51']:
-    #     for cellObj in rowOfCellObjects:
-    #         registration_num_data.append(cellObj.value)
-    #
-    # print(registration_num_data)
+        wb2 = openpyxl.Workbook()
+        ws2 = wb2.active
+        sheet2 = wb2['Sheet']
+        sheet2.title = 'Results Sheet'
 
-    registration_range = copy_range(1, 25, 1, 51, sheet)
-    paste_range(1, 2, 1, 26, sheet2, registration_range)
+        # for rowOfCellObjects in sheet['A25': 'A51']:
+        #     for cellObj in rowOfCellObjects:
+        #         registration_num_data.append(cellObj.value)
+        #
+        # print(registration_num_data)
 
-    name_of_students_range = copy_range(2, 25, 2, 51, sheet)
-    paste_range(2, 2, 2, 26, sheet2, name_of_students_range)
+        registration_range = copy_range(1, 25, 1, 51, sheet)
+        paste_range(1, 2, 1, 26, sheet2, registration_range)
 
-    total_marks_range = copy_range(8, 25, 8, 51, sheet)
-    paste_range(3, 2, 3, 26, sheet2, total_marks_range)
+        name_of_students_range = copy_range(2, 25, 2, 51, sheet)
+        paste_range(2, 2, 2, 26, sheet2, name_of_students_range)
 
-    grades_range = copy_range(9, 25, 9, 51, sheet)
-    paste_range(4, 2, 4, 26, sheet2, grades_range)
+        total_marks_range = copy_range(8, 25, 8, 51, sheet)
+        paste_range(3, 2, 3, 26, sheet2, total_marks_range)
 
-    for row in ws2.iter_rows():
-        for cell in row:
-            cell.alignment = Alignment(wrap_text=True, vertical='top')
+        grades_range = copy_range(9, 25, 9, 51, sheet)
+        paste_range(4, 2, 4, 26, sheet2, grades_range)
 
-    sheet2['A1'] = "registration_num"
-    sheet2['B1'] = "student_name"
-    sheet2['C1'] = "total_num"
-    sheet2['D1'] = "grade"
+        for row in ws2.iter_rows():
+            for cell in row:
+                cell.alignment = Alignment(wrap_text=True, vertical='top')
 
-    wb2.save(filename=cleaned_file)
+        sheet2['A1'] = "registration_num"
+        sheet2['B1'] = "student_name"
+        sheet2['C1'] = "total_num"
+        sheet2['D1'] = "grade"
+        sheet2['E1'] = "year"
+
+        for i in range(2, 27):
+            ws2[f"E{i}"].value = 2019
+
+        os.chdir('cleaned_data')
+        wb2.save(filename=f'{cleaned_file}')
+        os.chdir('../')
 
 
 if __name__ == '__main__':
