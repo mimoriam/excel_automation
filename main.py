@@ -4,6 +4,7 @@ import os
 import pathlib
 import re
 import pandas as pd
+import time
 
 
 def copy_range(startCol, startRow, endCol, endRow, sheet):
@@ -30,8 +31,26 @@ def paste_range(startCol, startRow, endCol, endRow, sheetReceiving, copiedData):
 def main():
     xlsx_list = []
     xlsx_list_cleaned = []
+
+    # data_to_be_processed = "data_to_be_processed"
+    cleaned_data_dir = "cleaned_data"
+    combined_data_dir = "combined_data"
+
+    # if not os.path.exists(data_to_be_processed):
+    #     os.makedirs(data_to_be_processed)
+
+    if not os.path.exists(cleaned_data_dir):
+        os.makedirs(cleaned_data_dir)
+
+    if not os.path.exists(combined_data_dir):
+        os.makedirs(combined_data_dir)
+
+    time.sleep(1)
+
+    # os.chdir("data_to_be_processed")
+
     xlsx = pathlib.Path().glob("*.xlsx")
-    xlsx_cleaned = pathlib.Path('cleaned_data').glob("*.xlsx")
+    xlsx_cleaned = pathlib.Path("cleaned_data").glob("*.xlsx")
 
     for file in xlsx:
         xlsx_list.append(file)
